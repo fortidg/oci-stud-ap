@@ -8,7 +8,7 @@
 
 variable "region" {
   description = "Oracle Cloud region"
-  default     = "us-phoenix-1"
+  default     = "us-ashburn-1"
 }
 
 ##############################################################################################################
