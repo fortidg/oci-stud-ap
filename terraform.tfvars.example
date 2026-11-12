@@ -1,0 +1,33 @@
+// Change to your own variables
+tenancy_ocid     = "<OCI tenancy id>"
+compartment_ocid = "<OCI compartment id>"
+user_ocid        = "<OCI user id>"
+fingerprint      = "<Fingerprint>"
+private_key_path = "<Private key>"
+region           = "<region>"
+
+# Optional: leave marketplace OCIDs empty to resolve them dynamically.
+# instance_shape             = "VM.Standard3.Flex"
+# instance_ocpus             = 4
+# instance_memory_in_gbs     = 60
+# mp_listing_display_name      = "FortiGate Next-Gen Firewall (4 cores)"
+# mp_listing_resource_version  = "7.4.7_(_X64_)"
+# mp_listing_id                = ""
+# mp_listing_resource_id       = ""
+
+# Optional: reuse an existing network instead of creating one.
+# Set create_network = false and supply the existing subnet/VCN OCIDs.
+# When false, configure the existing trusted subnet's route table to send
+# 0.0.0.0/0 to the FortiGate trusted float IP (see Trusted_Float_Private_IP output).
+# create_network                = false
+# existing_vcn_id               = "<vcn ocid>"
+# existing_untrusted_subnet_id  = "<untrusted subnet ocid>"
+# existing_trusted_subnet_id    = "<trusted subnet ocid>"
+# existing_hbdev_subnet_id      = "<heartbeat subnet ocid>"
+# existing_management_subnet_id = "<management subnet ocid>"
+
+
+fgt_byol_flexvm_license_a = "<flex token1>"
+fgt_byol_flexvm_license_b = "<flex token2>"
+
+PREFIX = "<prefix>"
