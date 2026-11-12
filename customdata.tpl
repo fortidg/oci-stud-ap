@@ -133,25 +133,4 @@ end
 
 
 
-%{ if fgt_license_flexvm != "" }
---==OCI==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="license"
-
-LICENSE-TOKEN:${fgt_license_flexvm}
-
-%{ endif }
-
-%{ if fgt_license_file != "" }
---==OCI==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="license"
-
-${fgt_license_file}
-
-%{ endif }
 --==OCI==--

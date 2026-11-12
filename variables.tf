@@ -9,12 +9,12 @@
 # Prefix for all resources created for this deployment in Microsoft Azure
 variable "PREFIX" {
   description = "Added name to each deployed resource"
-  default = ""
+  default     = ""
 }
 
 variable "region" {
   description = "Oracle Cloud region"
-  default = "us-ashburn-1"
+  default     = "us-phoenix-1"
 }
 
 ##############################################################################################################
@@ -82,38 +82,6 @@ variable "cert" {
 }
 
 ##############################################################################################################
-# FortiGate license type
-##############################################################################################################
-
-// license file location for fgt a
-variable "fgt_byol_license_a" {
-  // Change to your own path
-  type    = string
-  default = ""
-}
-
-// license file location for fgt b
-variable "fgt_byol_license_b" {
-  // Change to your own path
-  type    = string
-  default = ""
-}
-
-// Flex-VM license token for fgt a
-variable "fgt_byol_flexvm_license_a" {
-  // Change to your own path
-  type    = string
-  default = ""
-}
-
-// Flex-VM license token for fgt b
-variable "fgt_byol_flexvm_license_b" {
-  // Change to your own path
-  type    = string
-  default = ""
-}
-
-##############################################################################################################
 # VCN and SUBNET ADDRESSESS
 ##############################################################################################################
 
@@ -169,10 +137,10 @@ variable "subnet" {
   description = ""
 
   default = {
-    "1" = "172.16.140.0/28"  # Flexible Network Load Balancer
-    "2" = "172.16.140.32/28" # Untrusted
-    "3" = "172.16.140.64/28" # Trusted
-    "4" = "172.16.140.96/28" # Heartbeat
+    "1" = "172.16.140.0/28"   # Flexible Network Load Balancer
+    "2" = "172.16.140.32/28"  # Untrusted
+    "3" = "172.16.140.64/28"  # Trusted
+    "4" = "172.16.140.96/28"  # Heartbeat
     "5" = "172.16.140.128/28" # Management
   }
 }
@@ -208,8 +176,8 @@ variable "fgt_ipaddress_a" {
   description = ""
 
   default = {
-    "2" = "172.16.140.45" # Untrusted
-    "3" = "172.16.140.77" # Trusted
+    "2" = "172.16.140.45"  # Untrusted
+    "3" = "172.16.140.77"  # Trusted
     "4" = "172.16.140.109" # Heartbeat
     "5" = "172.16.140.141" # Management
   }
@@ -220,8 +188,8 @@ variable "fgt_ipaddress_b" {
   description = ""
 
   default = {
-    "2" = "172.16.140.46" # Untrusted
-    "3" = "172.16.140.78" # Trusted
+    "2" = "172.16.140.46"  # Untrusted
+    "3" = "172.16.140.78"  # Trusted
     "4" = "172.16.140.110" # Heartbeat
     "5" = "172.16.140.142" # Management
   }
@@ -263,16 +231,16 @@ variable "volume_size" {
 }
 
 variable "drg_attachment_network_details_vcn_route_type" {
-  type = string
+  type    = string
   default = "VCN_CIDRS"
 }
 
-variable ha_netmask {
+variable "ha_netmask" {
   type    = string
   default = "255.255.255.240"
 }
 
-variable fgt_password {
+variable "fgt_password" {
   type    = string
   default = "Fortinet1234!"
 }

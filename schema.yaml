@@ -1,0 +1,198 @@
+# OCI Resource Manager stack form for this template.
+# Controls which variables students see when they create the stack in the OCI Console.
+title: "FortiGate Active/Passive HA pair"
+description: "Deploys an Active/Passive pair of FortiGate VMs from the OCI Marketplace into a new (or existing) VCN."
+schemaVersion: 1.1.0
+version: "20190304"
+locale: "en"
+
+variableGroups:
+  - title: "Student"
+    variables:
+      - compartment_ocid
+      - PREFIX
+      - student_name
+      - class_name
+
+  - title: "FortiGate"
+    variables:
+      - fgt_password
+      - instance_shape
+      - instance_ocpus
+      - instance_memory_in_gbs
+      - availability_domain
+      - availability_domain2
+
+  - title: "Marketplace image (advanced)"
+    variables:
+      - mp_listing_display_name
+      - mp_listing_resource_version
+      - mp_listing_id
+      - mp_listing_resource_id
+
+  - title: "Existing network (advanced)"
+    variables:
+      - create_network
+      - existing_vcn_id
+      - existing_untrusted_subnet_id
+      - existing_trusted_subnet_id
+      - existing_hbdev_subnet_id
+      - existing_management_subnet_id
+
+  # Populated automatically by Resource Manager, or fixed by the lab design.
+  - title: "Hidden"
+    visible: false
+    variables:
+      - tenancy_ocid
+      - region
+      - user_ocid
+      - fingerprint
+      - private_key_path
+      - cert
+      - vcn
+      - subnet
+      - subnetmask
+      - fgt_ipaddress_a
+      - fgt_ipaddress_b
+      - unt_float_ipaddress
+      - tr_float_ipaddress
+      - volume_size
+      - ha_netmask
+      - drg_attachment_network_details_vcn_route_type
+
+variables:
+  compartment_ocid:
+    type: oci:identity:compartment:id
+    required: true
+    title: "Student compartment"
+    description: "Compartment to deploy into. Use the compartment you were assigned."
+
+  PREFIX:
+    type: string
+    required: true
+    title: "Name prefix"
+    description: "Short, unique name prepended to every resource (e.g. your initials). Lowercase letters, numbers and hyphens; must start with a letter."
+    pattern: "^[a-z][a-z0-9-]{0,14}$"
+
+  student_name:
+    type: string
+    required: false
+    title: "Student name (tag)"
+    description: "Applied as the 'student' tag on every resource. Defaults to the name prefix when left empty."
+
+  class_name:
+    type: string
+    required: true
+    title: "Class (tag)"
+    description: "Applied as the 'class' tag on every resource. Leave as provided by your instructor."
+
+  fgt_password:
+    type: string
+    required: true
+    title: "FortiGate admin password"
+
+  instance_shape:
+    type: string
+    required: true
+    title: "Instance shape"
+
+  instance_ocpus:
+    type: number
+    required: true
+    title: "OCPUs (Flex shapes only)"
+
+  instance_memory_in_gbs:
+    type: number
+    required: true
+    title: "Memory in GB (Flex shapes only)"
+
+  availability_domain:
+    type: enum
+    enum: ["1", "2", "3"]
+    required: true
+    title: "Availability domain for FortiGate A"
+
+  availability_domain2:
+    type: enum
+    enum: ["1", "2", "3"]
+    required: true
+    title: "Availability domain for FortiGate B"
+    description: "Use the same value as FortiGate A in single-AD regions."
+
+
+
+  mp_listing_display_name:
+    type: string
+    required: true
+    title: "Marketplace listing name"
+
+  mp_listing_resource_version:
+    type: string
+    required: true
+    title: "Marketplace image version"
+
+  mp_listing_id:
+    type: string
+    required: false
+    title: "Marketplace listing OCID override"
+    description: "Leave empty to look the listing up by name."
+
+  mp_listing_resource_id:
+    type: string
+    required: false
+    title: "Marketplace image OCID override"
+    description: "Leave empty to look the image up by listing and version."
+
+  create_network:
+    type: boolean
+    title: "Create a new VCN and subnets"
+    description: "Uncheck to deploy into an existing VCN."
+
+  existing_vcn_id:
+    type: oci:core:vcn:id
+    title: "Existing VCN"
+    visible:
+      not:
+        - create_network
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+
+  existing_untrusted_subnet_id:
+    type: oci:core:subnet:id
+    title: "Existing untrusted subnet"
+    visible:
+      not:
+        - create_network
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${existing_vcn_id}
+
+  existing_trusted_subnet_id:
+    type: oci:core:subnet:id
+    title: "Existing trusted subnet"
+    visible:
+      not:
+        - create_network
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${existing_vcn_id}
+
+  existing_hbdev_subnet_id:
+    type: oci:core:subnet:id
+    title: "Existing heartbeat subnet"
+    visible:
+      not:
+        - create_network
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${existing_vcn_id}
+
+  existing_management_subnet_id:
+    type: oci:core:subnet:id
+    title: "Existing management subnet"
+    visible:
+      not:
+        - create_network
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${existing_vcn_id}

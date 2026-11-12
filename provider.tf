@@ -6,12 +6,15 @@
 #
 ##############################################################################################################
 
+// In OCI Resource Manager, authentication is handled by the service and
+// user_ocid / fingerprint / private_key_path are left empty (null).
+// When running Terraform locally, set them in terraform.tfvars.
 provider "oci" {
   tenancy_ocid     = var.tenancy_ocid
-  user_ocid        = var.user_ocid
-  fingerprint      = var.fingerprint
-  private_key_path = var.private_key_path
   region           = var.region
+  user_ocid        = var.user_ocid == "" ? null : var.user_ocid
+  fingerprint      = var.fingerprint == "" ? null : var.fingerprint
+  private_key_path = var.private_key_path == "" ? null : var.private_key_path
 }
 
 terraform {
