@@ -18,15 +18,17 @@ variable "class_name" {
 }
 
 variable "student_name" {
-  description = "Student identifier, applied as the 'student' tag on every resource. Defaults to PREFIX when empty."
+  description = "Optional student identifier, applied as the 'student' tag on every resource. Omitted when empty."
   type        = string
   default     = ""
 }
 
 locals {
-  freeform_tags = {
-    "class"      = var.class_name
-    "student"    = var.student_name != "" ? var.student_name : var.PREFIX
-    "managed-by" = "terraform"
-  }
+  freeform_tags = merge(
+    {
+      "class"      = var.class_name
+      "managed-by" = "terraform"
+    },
+    var.student_name != "" ? { "student" = var.student_name } : {}
+  )
 }

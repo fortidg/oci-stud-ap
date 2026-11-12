@@ -14,7 +14,7 @@ resource "oci_core_virtual_network" "vcn" {
   count          = var.create_network ? 1 : 0
   cidr_block     = var.vcn
   compartment_id = var.compartment_ocid
-  display_name   = "${var.PREFIX}-vcn"
+  display_name   = "vcn"
   freeform_tags  = local.freeform_tags
   dns_label      = "fgthub"
 }
@@ -22,7 +22,7 @@ resource "oci_core_virtual_network" "vcn" {
 resource "oci_core_internet_gateway" "igw" {
   count          = var.create_network ? 1 : 0
   compartment_id = var.compartment_ocid
-  display_name   = "${var.PREFIX}-igw"
+  display_name   = "igw"
   freeform_tags  = local.freeform_tags
   vcn_id         = oci_core_virtual_network.vcn[0].id
 }
@@ -36,7 +36,7 @@ resource "oci_core_internet_gateway" "igw" {
 resource "oci_core_subnet" "untrusted_subnet" {
   count             = var.create_network ? 1 : 0
   cidr_block        = var.subnet["2"]
-  display_name      = "${var.PREFIX}-untrusted"
+  display_name      = "untrusted"
   freeform_tags     = local.freeform_tags
   compartment_id    = var.compartment_ocid
   vcn_id            = oci_core_virtual_network.vcn[0].id
@@ -50,7 +50,7 @@ resource "oci_core_route_table" "untrusted_routetable" {
   count          = var.create_network ? 1 : 0
   compartment_id = var.compartment_ocid
   vcn_id         = oci_core_virtual_network.vcn[0].id
-  display_name   = "${var.PREFIX}-untrusted-rt"
+  display_name   = "untrusted-rt"
   freeform_tags  = local.freeform_tags
 
   route_rules {
@@ -63,7 +63,7 @@ resource "oci_core_security_list" "untrusted_security_list" {
   count          = var.create_network ? 1 : 0
   compartment_id = var.compartment_ocid
   vcn_id         = oci_core_virtual_network.vcn[0].id
-  display_name   = "${var.PREFIX}-untrusted-security-list"
+  display_name   = "untrusted-security-list"
   freeform_tags  = local.freeform_tags
 
   // allow outbound tcp traffic on all ports
@@ -72,7 +72,7 @@ resource "oci_core_security_list" "untrusted_security_list" {
     protocol    = "all"
   }
 
-  
+
   // allow inbound http (port 443) traffic
   ingress_security_rules {
     protocol = "6" // tcp
@@ -117,7 +117,7 @@ resource "oci_core_security_list" "untrusted_security_list" {
 resource "oci_core_subnet" "trusted_subnet" {
   count                      = var.create_network ? 1 : 0
   cidr_block                 = var.subnet["3"]
-  display_name               = "${var.PREFIX}-trusted"
+  display_name               = "trusted"
   freeform_tags              = local.freeform_tags
   compartment_id             = var.compartment_ocid
   vcn_id                     = oci_core_virtual_network.vcn[0].id
@@ -181,7 +181,7 @@ resource "oci_core_route_table" "trusted_routetable" {
 resource "oci_core_subnet" "hbdev_subnet" {
   count                      = var.create_network ? 1 : 0
   cidr_block                 = var.subnet["4"]
-  display_name               = "${var.PREFIX}-hbdev"
+  display_name               = "hbdev"
   freeform_tags              = local.freeform_tags
   compartment_id             = var.compartment_ocid
   vcn_id                     = oci_core_virtual_network.vcn[0].id
@@ -217,7 +217,7 @@ resource "oci_core_security_list" "hbdev_security_list" {
 resource "oci_core_subnet" "management_subnet" {
   count             = var.create_network ? 1 : 0
   cidr_block        = var.subnet["5"]
-  display_name      = "${var.PREFIX}-management"
+  display_name      = "management"
   freeform_tags     = local.freeform_tags
   compartment_id    = var.compartment_ocid
   vcn_id            = oci_core_virtual_network.vcn[0].id
@@ -231,7 +231,7 @@ resource "oci_core_route_table" "management_routetable" {
   count          = var.create_network ? 1 : 0
   compartment_id = var.compartment_ocid
   vcn_id         = oci_core_virtual_network.vcn[0].id
-  display_name   = "${var.PREFIX}-management-rt"
+  display_name   = "management-rt"
   freeform_tags  = local.freeform_tags
 
   route_rules {
@@ -244,7 +244,7 @@ resource "oci_core_security_list" "management_security_list" {
   count          = var.create_network ? 1 : 0
   compartment_id = var.compartment_ocid
   vcn_id         = oci_core_virtual_network.vcn[0].id
-  display_name   = "${var.PREFIX}-management-security-list"
+  display_name   = "management-security-list"
   freeform_tags  = local.freeform_tags
 
   // allow outbound tcp traffic on all ports
@@ -301,7 +301,7 @@ resource "oci_core_instance" "vm_fgt_a" {
 
   availability_domain = lookup(data.oci_identity_availability_domains.ads.availability_domains[var.availability_domain - 1], "name")
   compartment_id      = var.compartment_ocid
-  display_name        = "${var.PREFIX}-fgta"
+  display_name        = "fgta"
   freeform_tags       = local.freeform_tags
   shape               = var.instance_shape
 
@@ -315,10 +315,10 @@ resource "oci_core_instance" "vm_fgt_a" {
 
   create_vnic_details {
     subnet_id        = local.management_subnet_id
-    display_name     = "${var.PREFIX}-fgta-vnic-management"
+    display_name     = "fgta-vnic-management"
     freeform_tags    = local.freeform_tags
     assign_public_ip = true
-    hostname_label   = "${var.PREFIX}-fgta-vnic-management"
+    hostname_label   = "fgta-vnic-management"
     private_ip       = var.fgt_ipaddress_a["5"]
   }
 
@@ -347,11 +347,11 @@ resource "oci_core_instance" "vm_fgt_a" {
 resource "oci_core_vnic_attachment" "vnic_attach_untrusted_fgt_a" {
   depends_on   = [oci_core_instance.vm_fgt_a]
   instance_id  = oci_core_instance.vm_fgt_a.id
-  display_name = "${var.PREFIX}-fgta-vnic-untrusted"
+  display_name = "fgta-vnic-untrusted"
 
   create_vnic_details {
     subnet_id              = local.untrusted_subnet_id
-    display_name           = "${var.PREFIX}-fgta-vnic-untrusted"
+    display_name           = "fgta-vnic-untrusted"
     freeform_tags          = local.freeform_tags
     assign_public_ip       = true
     skip_source_dest_check = true
@@ -361,7 +361,7 @@ resource "oci_core_vnic_attachment" "vnic_attach_untrusted_fgt_a" {
 
 resource "oci_core_private_ip" "untrusted_float_fgt_a" {
   vnic_id       = oci_core_vnic_attachment.vnic_attach_untrusted_fgt_a.vnic_id
-  display_name  = "${var.PREFIX}-fgta-vnic-untrusted-float"
+  display_name  = "fgta-vnic-untrusted-float"
   freeform_tags = local.freeform_tags
   ip_address    = var.unt_float_ipaddress["2"]
 }
@@ -369,7 +369,7 @@ resource "oci_core_private_ip" "untrusted_float_fgt_a" {
 resource "oci_core_public_ip" "untrusted_float_public_ip" {
   compartment_id = var.compartment_ocid
   lifetime       = "RESERVED"
-  display_name   = "${var.PREFIX}-untrusted-float-public-ip"
+  display_name   = "untrusted-float-public-ip"
   freeform_tags  = local.freeform_tags
   private_ip_id  = oci_core_private_ip.untrusted_float_fgt_a.id
 }
@@ -377,11 +377,11 @@ resource "oci_core_public_ip" "untrusted_float_public_ip" {
 resource "oci_core_vnic_attachment" "vnic_attach_trusted_fgt_a" {
   depends_on   = [oci_core_vnic_attachment.vnic_attach_untrusted_fgt_a]
   instance_id  = oci_core_instance.vm_fgt_a.id
-  display_name = "${var.PREFIX}-fgta-vnic-trusted"
+  display_name = "fgta-vnic-trusted"
 
   create_vnic_details {
     subnet_id              = local.trusted_subnet_id
-    display_name           = "${var.PREFIX}-fgta-vnic-trusted"
+    display_name           = "fgta-vnic-trusted"
     freeform_tags          = local.freeform_tags
     assign_public_ip       = false
     skip_source_dest_check = true
@@ -391,7 +391,7 @@ resource "oci_core_vnic_attachment" "vnic_attach_trusted_fgt_a" {
 
 resource "oci_core_private_ip" "trusted_float_fgt_a" {
   vnic_id       = oci_core_vnic_attachment.vnic_attach_trusted_fgt_a.vnic_id
-  display_name  = "${var.PREFIX}-fgta-vnic-trusted-float"
+  display_name  = "fgta-vnic-trusted-float"
   freeform_tags = local.freeform_tags
   ip_address    = var.tr_float_ipaddress["3"]
 }
@@ -399,11 +399,11 @@ resource "oci_core_private_ip" "trusted_float_fgt_a" {
 resource "oci_core_vnic_attachment" "vnic_attach_hbdev_fgt_a" {
   depends_on   = [oci_core_vnic_attachment.vnic_attach_trusted_fgt_a]
   instance_id  = oci_core_instance.vm_fgt_a.id
-  display_name = "${var.PREFIX}-fgta-vnic-hbdev"
+  display_name = "fgta-vnic-hbdev"
 
   create_vnic_details {
     subnet_id              = local.hbdev_subnet_id
-    display_name           = "${var.PREFIX}-fgta-vnic-hbdev"
+    display_name           = "fgta-vnic-hbdev"
     freeform_tags          = local.freeform_tags
     assign_public_ip       = false
     skip_source_dest_check = true
@@ -415,7 +415,7 @@ resource "oci_core_vnic_attachment" "vnic_attach_hbdev_fgt_a" {
 resource "oci_core_volume" "volume_fgt_a" {
   availability_domain = lookup(data.oci_identity_availability_domains.ads.availability_domains[var.availability_domain - 1], "name")
   compartment_id      = var.compartment_ocid
-  display_name        = "${var.PREFIX}-fgta-volume"
+  display_name        = "fgta-volume"
   freeform_tags       = local.freeform_tags
   size_in_gbs         = var.volume_size
 }
@@ -431,7 +431,7 @@ resource "oci_core_volume_attachment" "volume_attach_fgt_a" {
 // Use for bootstrapping cloud-init
 locals {
   custom_data_fgt_a = templatefile("${path.module}/customdata.tpl", {
-    fgt_vm_name           = "${var.PREFIX}-fgta"
+    fgt_vm_name           = "fgta"
     port1_ip              = var.fgt_ipaddress_a["5"]
     port1_mask            = var.subnetmask["5"]
     unt_float             = var.unt_float_ipaddress["2"]
@@ -464,7 +464,7 @@ resource "oci_core_instance" "vm_fgt_b" {
 
   availability_domain = lookup(data.oci_identity_availability_domains.ads.availability_domains[var.availability_domain2 - 1], "name")
   compartment_id      = var.compartment_ocid
-  display_name        = "${var.PREFIX}-fgtb"
+  display_name        = "fgtb"
   freeform_tags       = local.freeform_tags
   shape               = var.instance_shape
 
@@ -478,10 +478,10 @@ resource "oci_core_instance" "vm_fgt_b" {
 
   create_vnic_details {
     subnet_id        = local.management_subnet_id
-    display_name     = "${var.PREFIX}-fgtb-vnic-management"
+    display_name     = "fgtb-vnic-management"
     freeform_tags    = local.freeform_tags
     assign_public_ip = true
-    hostname_label   = "${var.PREFIX}-fgtb-vnic-management"
+    hostname_label   = "fgtb-vnic-management"
     private_ip       = var.fgt_ipaddress_b["5"]
   }
 
@@ -509,11 +509,11 @@ resource "oci_core_instance" "vm_fgt_b" {
 resource "oci_core_vnic_attachment" "vnic_attach_untrusted_fgt_b" {
   depends_on   = [oci_core_instance.vm_fgt_b]
   instance_id  = oci_core_instance.vm_fgt_b.id
-  display_name = "${var.PREFIX}-fgtb-vnic-untrusted"
+  display_name = "fgtb-vnic-untrusted"
 
   create_vnic_details {
     subnet_id              = local.untrusted_subnet_id
-    display_name           = "${var.PREFIX}-fgtb-vnic-untrusted"
+    display_name           = "fgtb-vnic-untrusted"
     freeform_tags          = local.freeform_tags
     assign_public_ip       = true
     skip_source_dest_check = true
@@ -524,11 +524,11 @@ resource "oci_core_vnic_attachment" "vnic_attach_untrusted_fgt_b" {
 resource "oci_core_vnic_attachment" "vnic_attach_trusted_fgt_b" {
   depends_on   = [oci_core_vnic_attachment.vnic_attach_untrusted_fgt_b]
   instance_id  = oci_core_instance.vm_fgt_b.id
-  display_name = "${var.PREFIX}-fgtb-vnic-trusted"
+  display_name = "fgtb-vnic-trusted"
 
   create_vnic_details {
     subnet_id              = local.trusted_subnet_id
-    display_name           = "${var.PREFIX}-fgtb-vnic-trust"
+    display_name           = "fgtb-vnic-trust"
     freeform_tags          = local.freeform_tags
     assign_public_ip       = false
     skip_source_dest_check = true
@@ -539,11 +539,11 @@ resource "oci_core_vnic_attachment" "vnic_attach_trusted_fgt_b" {
 resource "oci_core_vnic_attachment" "vnic_attach_hbdev_fgt_b" {
   depends_on   = [oci_core_vnic_attachment.vnic_attach_trusted_fgt_b]
   instance_id  = oci_core_instance.vm_fgt_b.id
-  display_name = "${var.PREFIX}-fgtb-vnic-hbdev"
+  display_name = "fgtb-vnic-hbdev"
 
   create_vnic_details {
     subnet_id              = local.hbdev_subnet_id
-    display_name           = "${var.PREFIX}-fgtb-vnic-trusted"
+    display_name           = "fgtb-vnic-trusted"
     freeform_tags          = local.freeform_tags
     assign_public_ip       = false
     skip_source_dest_check = true
@@ -555,7 +555,7 @@ resource "oci_core_vnic_attachment" "vnic_attach_hbdev_fgt_b" {
 resource "oci_core_volume" "volume_fgt_b" {
   availability_domain = lookup(data.oci_identity_availability_domains.ads.availability_domains[var.availability_domain2 - 1], "name")
   compartment_id      = var.compartment_ocid
-  display_name        = "${var.PREFIX}-fgtb-volume"
+  display_name        = "fgtb-volume"
   freeform_tags       = local.freeform_tags
   size_in_gbs         = var.volume_size
 }
@@ -570,7 +570,7 @@ resource "oci_core_volume_attachment" "volume_attach_fgt_b" {
 // Use for bootstrapping cloud-init
 locals {
   custom_data_fgt_b = templatefile("${path.module}/customdata.tpl", {
-    fgt_vm_name           = "${var.PREFIX}-fgtb"
+    fgt_vm_name           = "fgtb"
     port1_ip              = var.fgt_ipaddress_b["5"]
     port1_mask            = var.subnetmask["5"]
     unt_float             = var.unt_float_ipaddress["2"]

@@ -10,7 +10,6 @@ variableGroups:
   - title: "Student"
     variables:
       - compartment_ocid
-      - PREFIX
       - student_name
       - class_name
 
@@ -67,18 +66,12 @@ variables:
     title: "Student compartment"
     description: "Compartment to deploy into. Use the compartment you were assigned."
 
-  PREFIX:
-    type: string
-    required: true
-    title: "Name prefix"
-    description: "Short, unique name prepended to every resource (e.g. your initials). Lowercase letters, numbers and hyphens; must start with a letter."
-    pattern: "^[a-z][a-z0-9-]{0,14}$"
 
   student_name:
     type: string
     required: false
     title: "Student name (tag)"
-    description: "Applied as the 'student' tag on every resource. Defaults to the name prefix when left empty."
+    description: "Optional. Applied as the 'student' tag on every resource."
 
   class_name:
     type: string

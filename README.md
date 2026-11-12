@@ -19,7 +19,7 @@ This template is designed to run as an OCI Resource Manager stack, so Terraform 
 2. Make sure the region in the top right of the Console is the class region.
 3. Accept the Oracle terms, and set **Create in compartment** to **your assigned compartment**.
 4. Pick the newest Terraform version offered (the template needs 1.3 or later).
-5. On the variables page, fill in **Name prefix**, keep the **Class** value your instructor gave you, and set the FortiGate password.
+5. On the variables page, keep the **Class** value your instructor gave you, optionally enter your name, and set the FortiGate password.
 6. Run **Apply**. Outputs (management IPs, password, float IPs) appear on the job's **Outputs** tab.
 
 When you are finished, run **Destroy** on the stack. Your instructor can also destroy it for you.
@@ -36,7 +36,7 @@ When you are finished, run **Destroy** on the stack. Your instructor can also de
 Allow group student01 to manage all-resources in compartment Students:student01
 ```
 
-**Tags.** Every taggable resource gets the freeform tags `class`, `student` (defaults to the name prefix) and `managed-by = terraform` (see `tags.tf`). Set the `class_name` default in `tags.tf` (or tell students the value) before each class.
+**Tags.** Every taggable resource gets the freeform tags `class`, `managed-by = terraform` and, if the student fills it in, `student` (see `tags.tf`). Set the `class_name` default in `tags.tf` (or tell students the value) before each class.
 
 **Cleanup**, run with your own OCI CLI credentials (requires `jq`):
 
