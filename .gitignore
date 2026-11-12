@@ -13,3 +13,4 @@
 *.lic
 *.plan
 dist/
+tf.plan

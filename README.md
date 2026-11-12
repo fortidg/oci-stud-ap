@@ -13,9 +13,11 @@ This terraform can resolve the marketplace image dynamically from the listing di
 
 This template is designed to run as an OCI Resource Manager stack, so Terraform state is stored by OCI rather than on a student's laptop, and no API keys are needed.
 
-1. Get the stack zip from your instructor (built with `scripts/package-stack.sh`).
-2. In the OCI Console, open **Developer Services → Resource Manager → Stacks → Create stack**.
-3. Choose **My configuration → .zip file**, upload the zip, and select **your assigned compartment** as the stack's compartment.
+[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/fortidg/oci-stud-ap/releases/latest/download/oci-ap-stack.zip)
+
+1. Click **Deploy to Oracle Cloud** above and sign in to the class tenancy. The Create stack page opens with this template already loaded.
+2. Make sure the region in the top right of the Console is the class region.
+3. Accept the Oracle terms, and set **Create in compartment** to **your assigned compartment**.
 4. Pick the newest Terraform version offered (the template needs 1.3 or later).
 5. On the variables page, fill in **Name prefix**, keep the **Class** value your instructor gave you, and set the FortiGate password.
 6. Run **Apply**. Outputs (management IPs, password, float IPs) appear on the job's **Outputs** tab.
@@ -24,7 +26,9 @@ When you are finished, run **Destroy** on the stack. Your instructor can also de
 
 ## Instructor setup and cleanup
 
-**Packaging.** `scripts/package-stack.sh` writes `dist/oci-ap-stack.zip` containing only the `.tf` files, `customdata.tpl` and `schema.yaml`. State, tfvars and plan files are never included. `schema.yaml` controls the stack's variable form: student-facing fields are shown, and the tenancy, region, API-key and network-layout variables are hidden.
+**Packaging.** `scripts/package-stack.sh` writes `dist/oci-ap-stack.zip` containing only the `.tf` files, `customdata.tpl` and `schema.yaml`. State, tfvars and plan files are never included.
+
+**Publishing for the Deploy button.** The button downloads `oci-ap-stack.zip` from this repo's *latest* GitHub release, so the repo must be public. After changing the Terraform, run `scripts/package-stack.sh`, then create a new release on GitHub and attach `dist/oci-ap-stack.zip`, keeping that exact file name. Students who click the button after that get the new version. Stacks they've already created keep the old one. `schema.yaml` controls the stack's variable form: student-facing fields are shown, and the tenancy, region, API-key and network-layout variables are hidden.
 
 **Permissions.** Each student needs to manage stacks, jobs and the deployed resources in their own compartment. Lab environments usually do this with one group per student, for example:
 
